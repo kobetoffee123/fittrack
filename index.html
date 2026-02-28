@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Complete fitness tracking app with workouts, nutrition, and progress tracking" />
+  <meta name="theme-color" content="#71717a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="FitTrack" />
+  <title>FitTrack - Your Fitness Companion</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div>
+          <h1>💪 FitTrack</h1>
+          <p class="subtitle" id="current-date"></p>
+        </div>
+        <div class="header-stats">
+          <div class="stat-badge">
+            <span class="stat-label">Streak</span>
+            <span class="stat-value" id="streak">0 days</span>
+          </div>
+          <div class="stat-badge">
+            <span class="stat-label">This Week</span>
+            <span class="stat-value" id="week-workouts">0 workouts</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="gym">🏋️ Gym</button>
+      <button class="tab-btn" data-tab="cardio">🏃 Cardio</button>
+      <button class="tab-btn" data-tab="bodyweight">⚖️ Weight</button>
+      <button class="tab-btn" data-tab="nutrition">🍎 Nutrition</button>
+      <button class="tab-btn" data-tab="progress">📊 Progress</button>
+      <button class="tab-btn" data-tab="records">🏆 Records</button>
+      <button class="tab-btn" data-tab="exercises">💡 Exercises</button>
+      <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
+    </div>
+
+    <!-- Gym Tab -->
+    <div class="tab-content active" id="gym-tab">
+      <div class="action-bar">
+        <button class="btn-primary" id="new-workout-btn">+ New Workout</button>
+        <button class="btn-secondary" id="repeat-last-workout-btn">🔄 Repeat Last</button>
+        <button class="btn-secondary" id="load-template-btn">📋 Templates</button>
+      </div>
+
+      <div class="card">
+        <h2>Recent Workouts</h2>
+        <div id="workout-list"></div>
+      </div>
+    </div>
+
+    <!-- Cardio Tab -->
+    <div class="tab-content" id="cardio-tab">
+      <div class="action-bar">
+        <button class="btn-primary" id="new-cardio-btn">+ Log Cardio</button>
+      </div>
+
+      <div class="card">
+        <h2>Cardio History</h2>
+        <div id="cardio-list"></div>
+      </div>
+    </div>
+
+    <!-- Body Weight Tab -->
+    <div class="tab-content" id="bodyweight-tab">
+      <div class="action-bar">
+        <button class="btn-primary" id="log-weight-btn">+ Log Weight</button>
+        <button class="btn-secondary" id="log-measurement-btn">📏 Measurements</button>
+        <button class="btn-secondary" id="add-photo-btn">📸 Progress Photo</button>
+      </div>
+
+      <div class="card">
+        <h2>Weight Progress</h2>
+        <div id="weight-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;"></div>
+        <div id="weight-chart"></div>
+      </div>
+
+      <div class="card">
+        <h2>Body Measurements</h2>
+        <div id="measurements-display"></div>
+      </div>
+
+      <div class="card">
+        <h2>Progress Photos</h2>
+        <div id="progress-photos"></div>
+      </div>
+
+      <div class="card">
+        <h2>Weight History</h2>
+        <div id="weight-list"></div>
+      </div>
+    </div>
+
+    <!-- Nutrition Tab -->
+    <div class="tab-content" id="nutrition-tab">
+      <div class="action-bar">
+        <button class="btn-primary" id="log-nutrition-btn">+ Log Meal</button>
+        <button class="btn-secondary" id="log-water-btn">💧 Water</button>
+        <button class="btn-secondary" id="log-sleep-btn">😴 Sleep</button>
+      </div>
+
+      <div class="card">
+        <h2>Today's Nutrition</h2>
+        <div id="nutrition-summary"></div>
+      </div>
+
+      <div class="card">
+        <h2>Hydration</h2>
+        <div id="water-tracker"></div>
+      </div>
+
+      <div class="card">
+        <h2>Sleep Tracking</h2>
+        <div id="sleep-tracker"></div>
+      </div>
+
+      <div class="card">
+        <h2>Nutrition History</h2>
+        <div id="nutrition-list"></div>
+      </div>
+    </div>
+
+    <!-- Progress Tab -->
+    <div class="tab-content" id="progress-tab">
+      <div class="card">
+        <h2>Achievements</h2>
+        <div id="achievements-display"></div>
+      </div>
+
+      <div class="card">
+        <h2>Training Calendar</h2>
+        <div id="workout-calendar"></div>
+      </div>
+
+      <div class="card">
+        <h2>Volume & Consistency</h2>
+        <div id="volume-chart"></div>
+      </div>
+
+      <div class="card">
+        <h2>Muscle Group Volume</h2>
+        <div id="muscle-volume-chart"></div>
+      </div>
+
+      <div class="card">
+        <h2>Strength Progress</h2>
+        <div class="filter-bar">
+          <select id="exercise-filter">
+            <option value="">Select exercise to view progress</option>
+          </select>
+        </div>
+        <div id="progress-chart"></div>
+      </div>
+
+      <div class="card">
+        <h2>Strength Standards</h2>
+        <div id="strength-standards"></div>
+      </div>
+
+      <div class="card">
+        <h2>Weekly Summary</h2>
+        <div id="weekly-summary"></div>
+      </div>
+    </div>
+
+    <!-- Records Tab -->
+    <div class="tab-content" id="records-tab">
+      <div class="card">
+        <h2>Personal Records</h2>
+        <p style="color: var(--text-light); margin-bottom: 20px;">Your best performances across all exercises</p>
+        <div class="filter-bar">
+          <select id="pr-filter">
+            <option value="all">All Exercises</option>
+            <option value="recent">Recent PRs (30 days)</option>
+          </select>
+        </div>
+        <div id="personal-records"></div>
+      </div>
+    </div>
+
+    <!-- Exercises Tab -->
+    <div class="tab-content" id="exercises-tab">
+      <div class="card">
+        <h2>Curated Programs</h2>
+        <p style="color: var(--text-light); margin-bottom: 20px;">Follow structured weekly workout programs designed for specific goals</p>
+        <div class="filter-bar">
+          <select id="program-filter">
+            <option value="">Select a program</option>
+            <option value="fullbody3x">Full Body 3x/Week</option>
+            <option value="ppl">Push/Pull/Legs 6x/Week</option>
+            <option value="upperlower">Upper/Lower 4x/Week</option>
+            <option value="strength">Strength Building 4x/Week</option>
+          </select>
+        </div>
+        <div id="program-details"></div>
+      </div>
+
+      <div class="card">
+        <h2>Single Workout Templates</h2>
+        <p style="color: var(--text-light); margin-bottom: 20px;">Quick workout suggestions for individual sessions</p>
+        <div class="filter-bar">
+          <select id="workout-type-filter">
+            <option value="">Select workout type</option>
+            <option value="push">Push Day (Chest, Shoulders, Triceps)</option>
+            <option value="pull">Pull Day (Back, Biceps)</option>
+            <option value="legs">Leg Day</option>
+            <option value="upper">Upper Body</option>
+            <option value="lower">Lower Body</option>
+            <option value="fullbody">Full Body</option>
+          </select>
+        </div>
+        <div id="workout-recommendations"></div>
+      </div>
+
+      <div class="card">
+        <h2>Exercise Library</h2>
+        <div class="filter-bar">
+          <select id="muscle-filter">
+            <option value="">All Muscle Groups</option>
+            <option value="chest">Chest</option>
+            <option value="back">Back</option>
+            <option value="legs">Legs</option>
+            <option value="shoulders">Shoulders</option>
+            <option value="arms">Arms</option>
+            <option value="core">Core</option>
+          </select>
+        </div>
+        <div id="exercise-library"></div>
+      </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div class="tab-content" id="settings-tab">
+      <div class="card">
+        <h2>Preferences</h2>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div>
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+              <input type="checkbox" id="dark-mode-toggle" style="width: 20px; height: 20px;" />
+              <span style="font-weight: 600;">🌙 Dark Mode</span>
+            </label>
+          </div>
+          <div>
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+              <input type="checkbox" id="notifications-toggle" style="width: 20px; height: 20px;" />
+              <span style="font-weight: 600;">🔔 Enable Notifications</span>
+            </label>
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Units</label>
+            <select id="units-select" style="padding: 10px; border: 2px solid var(--border); border-radius: 8px;">
+              <option value="kg">Kilograms (kg)</option>
+              <option value="lbs">Pounds (lbs)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Data Management</h2>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+          <button class="btn-primary" id="export-data-btn">📥 Export All Data</button>
+          <button class="btn-secondary" id="import-data-btn">📤 Import Data</button>
+          <input type="file" id="import-file-input" accept=".json" style="display: none;" />
+          <button class="btn-secondary" id="print-workout-btn">🖨️ Print Current Workout</button>
+          <button class="btn-danger" id="clear-data-btn" style="background: var(--danger); color: white;">🗑️ Clear All Data</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>About</h2>
+        <p style="color: var(--text-light);">FitTrack v2.0 - Your Complete Fitness Companion</p>
+        <p style="color: var(--text-light); margin-top: 10px;">All data is stored locally in your browser.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Workout Modal -->
+  <div id="workout-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h2>New Workout</h2>
+          <div id="workout-timer" style="display: none; margin-top: 5px;">
+            <span style="color: var(--primary); font-weight: 600;">⏱️ <span id="timer-display">00:00</span></span>
+            <span style="margin-left: 15px; color: var(--text-light);">Volume: <span id="volume-display">0 kg</span></span>
+            <span style="margin-left: 15px; color: var(--text-light);">Sets: <span id="sets-display">0</span></span>
+          </div>
+        </div>
+        <button class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="workout-name" placeholder="Workout name (e.g., Push Day)" />
+        <div id="exercises-container"></div>
+        <button class="btn-secondary" id="add-exercise-btn">+ Add Exercise</button>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancel-workout-btn">Cancel</button>
+        <button class="btn-primary" id="save-workout-btn">Save Workout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rest Timer Modal -->
+  <div id="rest-timer-modal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2>Rest Timer</h2>
+        <button class="close-btn" onclick="closeRestTimer()">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align: center; padding: 40px 20px;">
+        <div style="font-size: 4rem; font-weight: bold; color: var(--primary); margin-bottom: 20px;" id="rest-countdown">90</div>
+        <div style="font-size: 1.2rem; color: var(--text-light); margin-bottom: 30px;" id="rest-exercise-name">Rest</div>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button class="btn-secondary" onclick="adjustRestTimer(-15)">-15s</button>
+          <button class="btn-secondary" onclick="adjustRestTimer(15)">+15s</button>
+          <button class="btn-primary" onclick="closeRestTimer()">Skip</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Plate Calculator Modal -->
+  <div id="plate-calculator-modal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2>Plate Calculator</h2>
+        <button class="close-btn" onclick="closePlateCalculator()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Target Weight</label>
+          <input type="number" id="plate-target-weight" placeholder="e.g., 100" step="0.5" style="margin-bottom: 0;" />
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Bar Weight (kg)</label>
+          <select id="plate-bar-weight" style="margin-bottom: 0;">
+            <option value="20">Olympic Bar (20kg)</option>
+            <option value="15">Women's Bar (15kg)</option>
+            <option value="10">EZ Bar (10kg)</option>
+            <option value="7">Short Bar (7kg)</option>
+          </select>
+        </div>
+        <div id="plate-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PR Celebration Modal -->
+  <div id="pr-modal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-body" style="text-align: center; padding: 40px 20px;">
+        <div style="font-size: 4rem; margin-bottom: 20px;">🏆</div>
+        <h2 style="color: var(--success); margin-bottom: 10px;">New Personal Record!</h2>
+        <div id="pr-details" style="font-size: 1.2rem; color: var(--text); margin-bottom: 30px;"></div>
+        <button class="btn-primary" onclick="closePRModal()">Awesome!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cardio Modal -->
+  <div id="cardio-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Log Cardio</h2>
+        <button class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <select id="cardio-type">
+          <option value="running">Running</option>
+          <option value="cycling">Cycling</option>
+          <option value="swimming">Swimming</option>
+          <option value="walking">Walking</option>
+          <option value="rowing">Rowing</option>
+          <option value="other">Other</option>
+        </select>
+        <input type="number" id="cardio-duration" placeholder="Duration (minutes)" />
+        <input type="number" id="cardio-distance" placeholder="Distance (km) - optional" step="0.1" />
+        <textarea id="cardio-notes" placeholder="Notes (optional)"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancel-cardio-btn">Cancel</button>
+        <button class="btn-primary" id="save-cardio-btn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body Weight Modal -->
+  <div id="weight-modal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2>Log Body Weight</h2>
+        <button class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text);">Weight (kg)</label>
+          <input type="number" id="weight-value" placeholder="e.g., 75.5" step="0.1" min="0" style="font-size: 1.2rem;" />
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text);">Date</label>
+          <input type="date" id="weight-date" style="font-size: 1rem;" />
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text);">Notes (optional)</label>
+          <textarea id="weight-notes" placeholder="How are you feeling? Any observations?" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancel-weight-btn">Cancel</button>
+        <button class="btn-primary" id="save-weight-btn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body Measurements Modal -->
+  <div id="measurements-modal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2>Body Measurements</h2>
+        <button class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div>
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Chest (cm)</label>
+            <input type="number" id="measure-chest" placeholder="e.g., 100" step="0.5" />
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Waist (cm)</label>
+            <input type="number" id="measure-waist" placeholder="e.g., 80" step="0.5" />
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Hips (cm)</label>
+            <input type="number" id="measure-hips" placeholder="e.g., 95" step="0.5" />
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Left Arm (cm)</label>
+            <input type="number" id="measure-arm-left" placeholder="e.g., 35" step="0.5" />
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Right Arm (cm)</label>
+            <input type="number" id="measure-arm-right" placeholder="e.g., 35" step="0.5" />
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Left Thigh (cm)</label>
+            <input type="number" id="measure-thigh-left" placeholder="e.g., 55" step="0.5" />
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Right Thigh (cm)</label>
+            <input type="number" id="measure-thigh-right" placeholder="e.g., 55" step="0.5" />
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Left Calf (cm)</label>
+            <input type="number" id="measure-calf-left" placeholder="e.g., 38" step="0.5" />
+          </div>
+          <div>
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Right Calf (cm)</label>
+            <input type="number" id="measure-calf-right" placeholder="e.g., 38" step="0.5" />
+          </div>
+        </div>
+        <div style="margin-top: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Date</label>
+          <input type="date" id="measure-date" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeMeasurementsModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveMeasurements()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Photo Modal -->
+  <div id="photo-modal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2>Add Progress Photo</h2>
+        <button class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Photo</label>
+          <input type="file" id="photo-input" accept="image/*" style="padding: 10px; border: 2px solid var(--border); border-radius: 8px; width: 100%;" />
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Date</label>
+          <input type="date" id="photo-date" />
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Notes (optional)</label>
+          <textarea id="photo-notes" placeholder="Weight, body fat %, how you're feeling..." rows="3"></textarea>
+        </div>
+        <div id="photo-preview" style="margin-top: 15px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closePhotoModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveProgressPhoto()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nutrition Modal -->
+  <div id="nutrition-modal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2>Log Meal</h2>
+        <button class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Meal Type</label>
+          <select id="meal-type">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+          </select>
+        </div>
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Calories</label>
+          <input type="number" id="meal-calories" placeholder="e.g., 500" min="0" />
+        </div>
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Protein (g)</label>
+          <input type="number" id="meal-protein" placeholder="e.g., 30" min="0" />
+        </div>
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Carbs (g)</label>
+          <input type="number" id="meal-carbs" placeholder="e.g., 50" min="0" />
+        </div>
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Fats (g)</label>
+          <input type="number" id="meal-fats" placeholder="e.g., 15" min="0" />
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Description</label>
+          <textarea id="meal-description" placeholder="What did you eat?" rows="2"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeNutritionModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveNutrition()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Water Modal -->
+  <div id="water-modal" class="modal">
+    <div class="modal-content" style="max-width: 350px;">
+      <div class="modal-header">
+        <h2>Log Water</h2>
+        <button class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div style="font-size: 3rem; margin-bottom: 10px;">💧</div>
+          <p style="color: var(--text-light);">How much water did you drink?</p>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <button class="btn-secondary" onclick="addWater(250)">250ml</button>
+          <button class="btn-secondary" onclick="addWater(500)">500ml</button>
+          <button class="btn-secondary" onclick="addWater(750)">750ml</button>
+          <button class="btn-secondary" onclick="addWater(1000)">1L</button>
+        </div>
+        <div style="margin-top: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Custom Amount (ml)</label>
+          <input type="number" id="water-custom" placeholder="e.g., 350" min="0" step="50" />
+          <button class="btn-primary" onclick="addCustomWater()" style="margin-top: 10px; width: 100%;">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sleep Modal -->
+  <div id="sleep-modal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2>Log Sleep</h2>
+        <button class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Date</label>
+          <input type="date" id="sleep-date" />
+        </div>
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Hours of Sleep</label>
+          <input type="number" id="sleep-hours" placeholder="e.g., 7.5" step="0.5" min="0" max="24" />
+        </div>
+        <div style="margin-bottom: 15px;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Quality</label>
+          <select id="sleep-quality">
+            <option value="poor">😴 Poor</option>
+            <option value="fair">😐 Fair</option>
+            <option value="good">😊 Good</option>
+            <option value="excellent">😄 Excellent</option>
+          </select>
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 5px; font-weight: 600;">Notes (optional)</label>
+          <textarea id="sleep-notes" placeholder="Any observations about your sleep..." rows="2"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeSleepModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveSleep()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template Modal -->
+  <div id="template-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Workout Templates</h2>
+        <button class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="template-list"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeTemplateModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/script-new.js"></script>
+  <script>
+    // Register service worker for offline functionality
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then((registration) => {
+            console.log('ServiceWorker registered:', registration);
+          })
+          .catch((error) => {
+            console.log('ServiceWorker registration failed:', error);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
